@@ -16,9 +16,44 @@ open http://localhost:4000
 
 ## Deployment
 
-Once you build your site, pushed it to a git repo you can use <https://github.com/mvanduijker/k8s-skiff-kustomize> to deploy to your k8s cluster with kustomize.
+Once you built your site and pushed it to your git repo you can deploy with helm or kustomize.
+After deployment you can just edit your site and push.
+The changes will automatically be applied.
+
+### Helm
+
+Add the helm repo.
+
+```console
+helm repo add mvanduijker https://mvanduijker.github.io/mvanduijker-helm-charts
+helm repo update
+```
+
+Example to deploy with Traefik as ingress controller with automatic let's encrypt certificate.
+
+```console
+helm upgrade --install --create-namespace -n hello-world hello-world mvanduijker/k8s-skiff \
+  --set 'secret.git_url=https://github.com/mvanduijker/k8s-skiff-site-template' \
+  --set "ingress.enabled=true" \
+  --set-json 'ingress.hosts=[{"host": "hello-world.duyker.nl", "paths": [{"path": "/", "pathType": "ImplementationSpecific"}]}]' \
+  --set-json 'ingress.tls=[{"secretName": "hello-world-k8s-skiff-tls", "hosts": ["hello-world.duyker.nl"]}]' \
+  --set 'ingress.className=traefik' \
+  --set 'ingress.annotations.cert-manager\.io/cluster\-issuer=letsencrypt-prod'
+```
+
+For more info check the [chart](https://github.com/mvanduijker/mvanduijker-helm-charts/tree/main/charts/k8s-skiff).
+
+### Kustomize
+
+Clone or fork <https://github.com/mvanduijker/k8s-skiff-kustomize>.
+Change the hello-world overlay or create your own to your liking.
+
+To deploy:
+
+```console
+kubectl apply -k hello-world # your overlay name
+```
 
 ## Acknowledgements
 
 Thanks [dhh](https://github.com/dhh) and [37 Signals](https://37signals.com/) for making awesome stuff and the open source gifts they bring to us.
-
