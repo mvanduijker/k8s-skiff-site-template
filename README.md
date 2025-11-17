@@ -33,7 +33,7 @@ Example to deploy with Traefik as ingress controller with automatic let's encryp
 
 ```console
 helm upgrade --install --create-namespace -n hello-world hello-world mvanduijker/k8s-skiff \
-  --set 'secret.git_url=https://github.com/mvanduijker/k8s-skiff-site-template' \
+  --set 'secret.gitUrl=https://github.com/mvanduijker/k8s-skiff-site-template' \
   --set 'config.host=hello-world.duyker.nl' \
   --set 'config.secretName=hello-world-k8s-skiff-tls' \
   --set "ingress.enabled=true" \
